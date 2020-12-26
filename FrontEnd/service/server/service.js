@@ -1,21 +1,23 @@
+const SERVICE_ID= 'm'+process.argv[2];
+
 const express = require('express');
-const zmq = require('zeromq');
-const bodyParser = require("body-parser");
+//const zmq = require('zeromq');
 
 const service = express();
-let req = zmq.socket('req');
+//let req = zmq.socket('req');
 
 module.exports = (config) => {
   const log = config.log();
   
-  req.connect('tcp://localhost:9998');
+  //req.connect('tcp://localhost:9998');
   /*req.on('message', (msg)=> {
 	console.log('resp: '+msg)
 	process.exit(0);
   });*/
   
-  service.use(bodyParser.urlencoded({ extended: false }));
-  service.use(bodyParser.json());
+  service.use(express.urlencoded({
+		extended: true
+	}));
   
   // Add a request logging middleware in development mode
   if (service.get('env') === 'development') {
@@ -26,7 +28,8 @@ module.exports = (config) => {
   }
 
   service.post('/frontEnd/integraPI', (req, res, next) => {
-	console.log("El body contiene: " + req.body);
+	console.log("El body contiene: " + req.body.inf);
+	
 	if(!req.body.inf || !req.body.sup || !req.body.ite) {
 		respuesta = {
 			error: true,
@@ -42,8 +45,16 @@ module.exports = (config) => {
 		sup: req.body.sup,
 		ite: req.body.ite
 	};
-	req.send(mensaje);
-    return res.json({codigo: 200, mensaje: 'request sended'});
+	//req.send(mensaje);
+    return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
+  });
+  
+  service.get('/frontEnd/prove', (req, res, next) => {
+    return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
+  });
+  
+  service.get('/', (req, res, next) => {
+    return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
   });
 
   // eslint-disable-next-line no-unused-vars

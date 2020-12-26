@@ -1,4 +1,16 @@
 #!/usr/bin/env node
+// Load package.json
+const pjs = require('../package.json');
+// Get some meta info from the package.json
+const { name, version } = pjs;
+
+const SERVICE_NAME = name;
+const SERVICE_ID= 'm'+process.argv[2];
+const SCHEME = 'http';
+const HOST = '10.0.2.15';
+const PORT = process.argv[2]*1;
+
+const consul = require('consul')();
 const axios = require('axios');
 const http = require('http');
 
@@ -10,15 +22,25 @@ const service = require('../server/service')(config);
 const server = http.createServer(service);
 
 // Important - a service should not have a fixed port but should randomly choose one
-server.listen(5050);
+server.listen(PORT);
 
 server.on('listening', () => {
-  const registerService = () => axios.put(`http://localhost:3000/register/${config.name}/${config.version}/${server.address().port}`);
-
-  registerService();
-
-  const interval = setInterval(registerService, 20000);
-
+  var check = {
+	  id: SERVICE_ID,
+	  name: SERVICE_NAME,
+	  address: HOST,
+	  port: PORT,
+	  check: {
+		http: SCHEME+'://'+HOST+':'+PORT+'/frontEnd/prove',
+		ttl: '5s',
+		interval: '5s',
+		timeout: '5s',
+		deregistercriticalserviceafter: '1m'
+	  }
+  };
+  consul.agent.service.register(check, function(err) {
+		if (err) throw err;
+  });
   log.info(
     `Hi there! I'm listening on port ${server.address().port} in ${service.get('env')} mode.`,
   );

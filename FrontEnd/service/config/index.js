@@ -6,7 +6,7 @@ const pjs = require('../package.json');
 const { name, version } = pjs;
 
 // Set up a logger
-const getLogger = (serviceName, serviceVersion, level) => bunyan.createLogger({ name: `${serviceName}:${serviceVersion}`, level });
+const getLogger = (serviceName, serviceVersion, level) => bunyan.createLogger({ name: `${serviceName}`, level });
 
 // Configuration options for different environments
 module.exports = {
