@@ -1,0 +1,10 @@
+Para utilizar el control de versiones en la máquina docker de VirtualBOX:
+- Configuramos la máquina desde VirtualBOX > Capetas compartidas
+- Añadimos la carpeta en local donde tenemos el repositorio de git
+- Marcamos Automontar y Hacer permanente
+- Seleccionamos la carpeta que utilizaremos dentro de la máquina virtual
+- Una vez hecho, por linea de comandos introducimos la siguiente orden:
+	sudo usermod -a -G vboxsf "$(whoami)"
+- Reiniciamos la máquina y ya tenemos la carpeta compartida con todos los permisos necesarios.
+
+Ahora una vez hagamos un pull de el repositorio se actualizara tanto nuestra carpeta de windows como la de la máquina virtual, para hacer un push, siempre habrá que hacerlo desde windows. 
