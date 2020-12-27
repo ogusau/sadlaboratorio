@@ -18,3 +18,4 @@ http://127.0.0.1:8500/ui/			pagina web para consul
 docker build -t haproxy-image .
 docker run -it --rm --name haproxy-syntax-check haproxy-image haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg	//Comprueba que la sintaxis este bien
 docker run -d --name haproxy-run -p 8085:80 haproxy-image
+http://localhost/8085/ -> Comprobar que funciona bien el balanceador de carga 
