@@ -4,12 +4,13 @@ const express = require('express');
 const zmq = require('zeromq');
 
 const service = express();
-let req = zmq.socket('req');
+let req_socket = zmq.socket('req');
 
 module.exports = (config) => {
   const log = config.log();
   
-  req.connect('tcp://localhost:9998');
+  req_socket.connect('tcp://localhost:9998');
+  log.debug('Connected to zmq');
   /*req.on('message', (msg)=> {
 	console.log('resp: '+msg)
 	process.exit(0);
@@ -45,7 +46,8 @@ module.exports = (config) => {
 		sup: req.body.sup,
 		ite: req.body.ite
 	};
-	req.send(mensaje);
+	log.debug('Sending message: ' + JSON.stringify(mensaje));
+	req_socket.send(JSON.stringify(mensaje));
     return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
   });
   
