@@ -5,5 +5,5 @@ let msg = [];
 
 sc.bind('tcp://*:9998');
 sw.bind('tcp://*:9999');
-sc.on('message', (c,sep,m)=> {msg.push({client: c, msg: m});});
-//sw.on('message', (m)=> {sc.send(m)});
+sc.on('message', (c,sep,m)=> {sw.send({client: c, msg: m}); msg.push({client: c, msg: m});});
+sw.on('message', (m)=> {console.log('A message has arrived: ' + m);});

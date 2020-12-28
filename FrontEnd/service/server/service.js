@@ -1,15 +1,15 @@
 const SERVICE_ID= 'm'+process.argv[2];
 
 const express = require('express');
-//const zmq = require('zeromq');
+const zmq = require('zeromq');
 
 const service = express();
-//let req = zmq.socket('req');
+let req = zmq.socket('req');
 
 module.exports = (config) => {
   const log = config.log();
   
-  //req.connect('tcp://localhost:9998');
+  req.connect('tcp://localhost:9998');
   /*req.on('message', (msg)=> {
 	console.log('resp: '+msg)
 	process.exit(0);
@@ -45,7 +45,7 @@ module.exports = (config) => {
 		sup: req.body.sup,
 		ite: req.body.ite
 	};
-	//req.send(mensaje);
+	req.send(mensaje);
     return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
   });
   
