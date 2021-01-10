@@ -1,5 +1,3 @@
-const SERVICE_ID= 'm'+process.argv[2];
-
 const express = require('express');
 const zmq = require('zeromq');
 
@@ -8,8 +6,9 @@ let req_socket = zmq.socket('req');
 
 module.exports = (config) => {
   const log = config.log();
+  const SERVICE_ID = config.serviceID;
   
-  req_socket.connect('tcp://localhost:9998');
+  req_socket.connect('tcp://172.17.0.4:9998');
   log.debug('Connected to zmq');
   /*req.on('message', (msg)=> {
 	console.log('resp: '+msg)

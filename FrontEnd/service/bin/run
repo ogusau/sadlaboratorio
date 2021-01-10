@@ -4,17 +4,18 @@ const pjs = require('../package.json');
 // Get some meta info from the package.json
 const { name, version } = pjs;
 
+const ip = require('ip');
 const SERVICE_NAME = name;
-const SERVICE_ID= 'm'+process.argv[2];
 const SCHEME = 'http';
-const HOST = '10.0.2.15';
-const PORT = process.argv[2]*1;
+const HOST = ip.address();
+const PORT = 5050;
 
-const consul = require('consul')();
+const consul = require('consul')({host: '10.0.2.15', port:8500});
 const http = require('http');
 
 const config = require('../config')[process.env.NODE_ENV || 'development'];
 const log = config.log();
+const SERVICE_ID = config.serviceID;
 const service = require('../server/service')(config);
 const server = http.createServer(service);
 
@@ -39,6 +40,6 @@ server.on('listening', () => {
 		if (err) throw err;
   });
   log.info(
-    `Hi there! I'm listening on port ${server.address().port} in ${service.get('env')} mode.`,
+    `Hi there! I'm listening on IP ${ip.address()} on port ${server.address().port} in ${service.get('env')} mode.`,
   );
 });
