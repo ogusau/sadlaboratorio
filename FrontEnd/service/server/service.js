@@ -8,27 +8,25 @@ module.exports = (config) => {
   const log = config.log();
   const SERVICE_ID = config.serviceID;
   
-  req_socket.connect('tcp://172.17.0.4:9998');
+  req_socket.connect('tcp://localhost:9998');
   log.debug('Connected to zmq');
-  /*req.on('message', (msg)=> {
+  req_socket.on('message', (msg)=> {
 	console.log('resp: '+msg)
-	process.exit(0);
-  });*/
+  });
   
   service.use(express.urlencoded({
 		extended: true
 	}));
   
   // Add a request logging middleware in development mode
-  if (service.get('env') === 'development') {
+ /* if (service.get('env') === 'development') {
     service.use((req, res, next) => {
       log.debug(`${req.method}: ${req.url}`);
       return next();
     });
   }
-
+  */
   service.post('/frontEnd/integraPI', (req, res, next) => {
-	console.log("El body contiene: " + req.body.inf);
 	
 	if(!req.body.inf || !req.body.sup || !req.body.ite) {
 		respuesta = {
@@ -47,6 +45,8 @@ module.exports = (config) => {
 	};
 	log.debug('Sending message: ' + JSON.stringify(mensaje));
 	req_socket.send(JSON.stringify(mensaje));
+	//req_socket.send(mensaje);
+	
     return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
   });
   
