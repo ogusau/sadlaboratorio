@@ -4,6 +4,11 @@ https://hub.docker.com/_/haproxy		Imagen HAproxy
 https://www.youtube.com/watch?v=JOIFpo7XzDc&ab_channel=AlbertCoronado		Sobre cónsul (arranca en min 4:45)
 https://www.albertcoronado.com/2020/06/03/microservicios-service-discovery-con-hashicorp-consul-y-javascript/
 https://hub.docker.com/_/consul	 consul imagen
+https://docs.docker.com/compose/compose-file/compose-file-v3/  //LA BIBLIA
+
+
+#consultar IP contenedores
+sudo docker network inspect bridge
 
 
 #consul
@@ -14,8 +19,27 @@ docker run     -d     -p 8500:8500     -p 8600:8600/udp     --name=badger     co
 http://127.0.0.1:8500/ui/			pagina web para consul
 
 
+
 #HAproxy
 docker build -t haproxy-image .
 docker run -it --rm --name haproxy-syntax-check haproxy-image haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg	//Comprueba que la sintaxis este bien
 docker run -d --name haproxy-run -p 8085:80 haproxy-image
 http://localhost/8085/ -> Comprobar que funciona bien el balanceador de carga 
+
+
+
+#Crear contenedores para el resto de componentes
+docker build -t nombrecomponente-image .
+docker run -it --name front-run  --ip 172.17.2.19 front-image //FrontEnd
+docker run -it --name queue-run  --ip 172.17.2.22 queue-image //Queue
+docker run -it --name worker-run  --ip 172.17.2.24 worker-image //Worker
+
+
+#Instalar docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.27.4/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose --version
+sudo docker-compose up
+
+
+

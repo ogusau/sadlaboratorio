@@ -1,3 +1,18 @@
+//Load package.json
+const pjs = require('./package.json');
+
+//Get some meta info from the package.json
+const {name} = pjs;
+
+const ip = require('ip');
+const SERVICE_NAME = name;
+const SCHEME = 'http';
+const HOST = ip.address();
+const PORT1 = 9998;
+const PORT2 = 9999;
+const consul = require('consul')({host: '10.0.2.15', port:8500});
+const SERVICE_ID = require('uuid').v4();
+
 const zmq = require('zeromq');
 const ansInterval = 2000;
 let sc = zmq.socket('router'); // frontend
@@ -14,6 +29,45 @@ sw.bind('tcp://*:9999', (err)=> {
 	});
 
 console.log('Im listening now...');
+
+var check1 = {
+	id: SERVICE_ID,
+	name: SERVICE_NAME,
+	addres: HOST,
+	port: PORT1,
+	check: {
+		tcp: HOST+':'+PORT1,
+		ttl: '5s',
+		interval: '5s',
+		timeout: '5s',
+		deregistercriticalserviceafter: '1m'
+	}
+};
+
+var check2 = {
+	id: SERVICE_ID,
+	name: SERVICE_NAME,
+	addres: HOST,
+	port: PORT2,
+	check: {
+		tcp: HOST+':'+PORT2,
+		ttl: '5s',
+		interval: '5s',
+		timeout: '5s',
+		deregistercriticalserviceafter: '1m'
+	}
+};
+
+consul.agent.service.register(check1, function(err) {
+	if (err) throw err;
+});
+
+consul.agent.service.register(check2, function(err) {
+	if (err) throw err;
+});
+
+
+
 
 function dispatch(c,m){
 	console.log("Mensaje recibido:"+ m);
