@@ -1,21 +1,31 @@
 const zmq = require('zeromq');
 let req = zmq.socket('req');
+let req_available = zmq.socket('req');
 let id = req.identity='Worker1' +process.pid;
+
 var area, resultado_integral, x, inf, sup, inc, i, n;
-req.connect('tcp://localhost:9999');
+
+req.connect('tcp://localhost:9999', (err)=> {
+	console.log(err?"rq connect error":"rq connected to queue");
+});
 
 console.log('Im listening now...');
 console.log('Im number: ' + id);
+
+req.send(['','','']);
+
 req.on('message', (c,sep,msg)=> {
 	console.log('A new message has arrived: ' + msg);
 	let jsonMsg = JSON.parse(msg);
-	resultado_integral = integra(jsonMsg.inf,jsonMsg.sup,jsonMsg.ite);
+	resultado_integral = integra(jsonMsg.inf, jsonMsg.sup,jsonMsg.ite);
 	setTimeout(()=> {
-		req.send([c,'', resultado_integral])
+		req.send([c,'', resultado_integral]);
+		req.send(['','','']);
 		console.log('Respuesta enviada a la cola r: ' + resultado_integral);
 	}, 1000);
-})
-req.send(['','',''])
+});
+
+
 
 function integra(inf,sup,n){
 	let inf1 = Number.parseFloat(inf);

@@ -10,6 +10,10 @@ https://docs.docker.com/compose/compose-file/compose-file-v3/  //LA BIBLIA
 #consultar IP contenedores
 sudo docker network inspect bridge
 
+#consultar la tabla de resolución de direcciones (DNS) del consul
+dig @127.0.0.1 -p 8600 service_name.service.consul SRV
+
+
 
 #consul
 https://learn.hashicorp.com/tutorials/consul/docker-container-agents		manual sobre como lanzar Consul sobre Docker
@@ -26,7 +30,10 @@ docker run -it --rm --name haproxy-syntax-check haproxy-image haproxy -c -f /usr
 docker run -d --name haproxy-run -p 8085:80 haproxy-image
 http://localhost/8085/ -> Comprobar que funciona bien el balanceador de carga 
 
-
+#HAproxy
+docker build -t haproxyq-image .
+docker run -it --rm --name haproxy-syntax-check haproxyq-image haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg	//Comprueba que la sintaxis este bien
+docker run -d --name haproxyq-run -p 9998:80 -p 9999:81 haproxyq-image
 
 #Crear contenedores para el resto de componentes
 docker build -t nombrecomponente-image .

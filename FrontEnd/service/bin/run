@@ -31,15 +31,17 @@ server.on('listening', () => {
 	  check: {
 		http: SCHEME+'://'+HOST+':'+PORT+'/frontEnd/prove',
 		ttl: '5s',
-		interval: '5s',
-		timeout: '5s',
-		deregistercriticalserviceafter: '1m'
+		interval: '3s',
+		timeout: '3s',
+		deregistercriticalserviceafter: '3s'
 	  }
   };
   consul.agent.service.register(check, function(err) {
 		if (err) throw err;
   });
+  
   log.info(
-    `Hi there! I'm listening on IP ${ip.address()} on port ${server.address().port} in ${service.get('env')} mode.`,
+    `Hi there! I'm listening on IP ${ip.address()} on port ${server.address().port} in ${service.get('env')} mode.`
   );
+  
 });
