@@ -1,3 +1,4 @@
+#Documentación y vídeos
 https://www.youtube.com/watch?v=f_i8kuv6_mc&ab_channel=AlbertCoronado		sobre HAproxy
 https://www.albertcoronado.com/2020/06/16/edge-service-y-balanceo-de-carga-con-haproxy-hashicorp-consul-y-nodejs-formacion-microservicios/		Explicación de la implementación
 https://hub.docker.com/_/haproxy		Imagen HAproxy
@@ -5,6 +6,12 @@ https://www.youtube.com/watch?v=JOIFpo7XzDc&ab_channel=AlbertCoronado		Sobre có
 https://www.albertcoronado.com/2020/06/03/microservicios-service-discovery-con-hashicorp-consul-y-javascript/
 https://hub.docker.com/_/consul	 consul imagen
 https://docs.docker.com/compose/compose-file/compose-file-v3/  //LA BIBLIA
+https://www.consul.io/docs/discovery/checks						//Ejemplos de como definir los "checks" en consul para el registro de servicios
+https://www.haproxy.com/documentation/aloha/9-5/traffic-management/lb-layer7/dns-srv-records/				//Documentación sobre el DNS SRV records de HAproxy
+https://www.youtube.com/watch?v=cjm_NqteLLA&ab_channel=SelfTuts												//Ejemplo de cómo hacer accesible la APIREST de dockerd
+https://docs.docker.com/engine/api/v1.41/#																	//API de dockerd
+https://github.com/apocas/dockerode																			//Documentación sobre el módulo que permite el uso de la API de dockerd
+
 
 
 #consultar IP contenedores
@@ -12,7 +19,6 @@ sudo docker network inspect bridge
 
 #consultar la tabla de resolución de direcciones (DNS) del consul
 dig @127.0.0.1 -p 8600 service_name.service.consul SRV
-
 
 
 #consul
@@ -23,23 +29,18 @@ docker run     -d     -p 8500:8500     -p 8600:8600/udp     --name=badger     co
 http://127.0.0.1:8500/ui/			pagina web para consul
 
 
-
 #HAproxy
 docker build -t haproxy-image .
 docker run -it --rm --name haproxy-syntax-check haproxy-image haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg	//Comprueba que la sintaxis este bien
 docker run -d --name haproxy-run -p 8085:80 haproxy-image
 http://localhost/8085/ -> Comprobar que funciona bien el balanceador de carga 
 
-#HAproxy
-docker build -t haproxyq-image .
-docker run -it --rm --name haproxy-syntax-check haproxyq-image haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg	//Comprueba que la sintaxis este bien
-docker run -d --name haproxyq-run -p 9998:80 -p 9999:81 haproxyq-image
 
 #Crear contenedores para el resto de componentes
 docker build -t nombrecomponente-image .
-docker run -it --name front-run  --ip 172.17.2.19 front-image //FrontEnd
-docker run -it --name queue-run  --ip 172.17.2.22 queue-image //Queue
-docker run -it --name worker-run  --ip 172.17.2.24 worker-image //Worker
+docker run -it --name front-run front-image //FrontEnd
+docker run -it --name queue-run queue-image //Queue
+docker run -it --name worker-run  worker-image //Worker
 
 
 #Instalar docker-compose

@@ -4,12 +4,16 @@
   "description": "",
   "main": "Worker.js",
   "scripts": {
-    "start": "node Worker.js"
+    "start": "node bin/Worker.js | bunyan"
+  },
+  "dependencies": {
+    "Utilities": "file:Utilities",
+    "bunyan": "^1.8.12",
+    "consul": "^0.39.0",
+    "uuid": "^8.3.2",
+    "zeromq": "^5.2.0"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-	"zeromq": "^5.2.0"
-  }
+  "license": "ISC"
 }
