@@ -10,7 +10,7 @@ const SCHEME = 'http';
 const HOST = ip.address();
 const PORT = 5050;
 
-const consul = require('consul')({host: '10.0.2.15', port:8500});
+const consul = require('consul')({host: '172.16.238.2', port:8500});
 const http = require('http');
 
 const config = require('../config')[process.env.NODE_ENV || 'development'];
