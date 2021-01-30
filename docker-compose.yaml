@@ -1,0 +1,74 @@
+version: "3.9"
+ 
+services:    
+  consul:
+    image: "consul-image:latest"
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    deploy:
+      mode: replicated
+      replicas: 1
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.2
+        ipv6_address: 2001:3984:3989::10  
+  
+  haproxy:
+    image: "haproxy-image:latest"
+    depends_on:
+      - consul
+    ports:
+      - "8085:80"
+    deploy:
+      mode: replicated
+      replicas: 1
+    networks:
+      - app_net
+           
+  queue:
+    image: "queue-image:latest"
+    depends_on:
+      - consul 
+    deploy:
+      mode: replicated
+      replicas: 3
+    networks:
+      - app_net
+ 
+  worker:
+    image: "worker-image:latest"
+    depends_on:
+      - consul
+      - queue
+    deploy:
+      mode: replicated
+      replicas: 3
+    networks:
+      - app_net  
+        
+  frontend:
+    image: "frontend-image:latest"
+    depends_on:
+      - consul
+      - queue
+      - haproxy
+    deploy:
+      mode: replicated
+      replicas: 3
+    networks:
+      - app_net    
+        
+networks:
+  app_net:
+    name: cluster-net
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.238.0/24"
+        - subnet: "2001:3984:3989::/64"        
+   
+   
+   
+   
+        

@@ -5,7 +5,7 @@ const { name, version } = pjs;
 const config = require('../config')[process.env.NODE_ENV || 'development'];
 const log = config.log();
 
-const consul = require('consul')({host: '172.17.0.2', port:8500});
+const consul = require('consul')({host: '172.16.238.2', port:8500});
 const maths = require('Utilities');
 
 const zmq = require('zeromq');
