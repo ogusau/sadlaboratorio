@@ -7,5 +7,7 @@ ADD service ./
 
 RUN npm install
 
-EXPOSE 5050
+EXPOSE 9998
+EXPOSE 9999
+EXPOSE 9007
 CMD ["npm","start"]

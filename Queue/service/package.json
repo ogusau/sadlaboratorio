@@ -1,19 +1,20 @@
 {
-  "name": "queue",
+  "name": "Queue",
   "version": "1.0.0",
   "description": "",
   "main": "Queue.js",
   "scripts": {
-    "start": "node Queue.js"
+    "start": "node bin/Queue.js | bunyan"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "bunyan": "^1.8.12",
-    "consul": "^0.39.0",
+  	"consul": "^0.39.0",
+  	"perf_hooks": "0.0.1",
+  	"bunyan": "^1.8.12",
     "uuid": "^8.3.2",
     "ip": "^1.1.5",
     "zeromq": "^5.2.0"
-  }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
