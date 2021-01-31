@@ -43,12 +43,14 @@ heartBeats();
 
 req.on('message', (idusu, sep, msg) => {
 	if(msg != 'OK'){
-		log.debug('A new message has arrived: ' + msg);
-		let jsonMsg = JSON.parse(msg);
-		let integral_value = maths.integral(jsonMsg.inf, jsonMsg.sup,jsonMsg.ite);
-		let respuesta = '' + integral_value;
-		req.send([idusu, '', respuesta, 'respuesta']);
-		log.debug('The message has been responded: ' + respuesta);
+		var json = JSON.parse(msg);
+		let integral_value = maths.integral(json.inf, json.sup,json.ite);
+		let value = '' + integral_value;
+		let response = {};
+		response.resp = value;
+		response.header = json.header;
+		log.debug('The message has been responded: ' + JSON.stringify(response));
+		req.send([idusu, '', JSON.stringify(response), 'respuesta']);
 	}
 	else{
 		log.debug('Reporting for new Job');
