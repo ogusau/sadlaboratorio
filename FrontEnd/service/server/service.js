@@ -56,14 +56,16 @@ module.exports = (config) => {
   
   service.post('/frontEnd/integraPI', async (req, res, next) => {
 	isDone = true;
-	if(!req.body.inf || !req.body.sup || !req.body.ite) {
-		respuesta = {
-			error: true,
-			codigo: 502,
-			mensaje: 'Los campos inf, sup e ite son requeridos'
+	var infoerror = validateInput(req);
+	if(infoerror != 'OK'){
+		let reponse = {
+			code: 502,
+			message: infoerror,
+			responded: `Responded by: ${SERVICE_ID}`
 		};
-		return res.json(respuesta);
+		return res.json(reponse);	
 	}
+	
 	let mensaje = {
 		inf: req.body.inf,
 		sup: req.body.sup,
@@ -74,15 +76,25 @@ module.exports = (config) => {
 	while(isDone){
 		await sleep(300);
 	}
-    return res.json({code: 200, response: `${resp}`, responded: `Responded by: ${SERVICE_ID}`});
+    return res.json({code: 200, message: `${resp}`, responded: `Responded by: ${SERVICE_ID}`});
   });
   
+  function validateInput(req){
+  	if(!req.body.inf || !req.body.sup || !req.body.ite) {
+		return 'The parameters inf, sup and ite are mandatories';	
+	}	
+	if(isNaN(req.body.inf) || isNaN(req.body.sup) || isNaN(req.body.ite)){
+		return 'The 3 parameters must be a number'
+	}
+	return 'OK';
+  }
+  
   service.get('/frontEnd/prove', (req, res, next) => {
-    return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
+    return res.json({code: 200, message: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
   });
   
   service.get('/', (req, res, next) => {
-    return res.json({codigo: 200, mensaje: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
+    return res.json({code: 200, message: 'request sended', responded: `Responded by: ${SERVICE_ID}`});
   });
 
   // eslint-disable-next-line no-unused-vars
