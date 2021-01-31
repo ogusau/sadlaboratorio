@@ -2,7 +2,7 @@ version: "3.9"
  
 services:    
   consul:
-    image: "consul-image:latest"
+    image: "ogutsau/consul-image:latest"
     ports:
       - "8500:8500"
       - "8600:8600/udp"
@@ -15,7 +15,7 @@ services:
         ipv6_address: 2001:3984:3989::10  
   
   haproxy:
-    image: "haproxy-image:latest"
+    image: "ogutsau/haproxy-image:latest"
     depends_on:
       - consul
     ports:
@@ -27,7 +27,7 @@ services:
       - app_net
            
   queue:
-    image: "queue-image:latest"
+    image: "ogutsau/queue-image:latest"
     depends_on:
       - consul 
     deploy:
@@ -37,7 +37,7 @@ services:
       - app_net
  
   worker:
-    image: "worker-image:latest"
+    image: "ogutsau/worker-image:latest"
     depends_on:
       - consul
       - queue
@@ -48,7 +48,7 @@ services:
       - app_net  
         
   frontend:
-    image: "frontend-image:latest"
+    image: "ogutsau/frontend-image:latest"
     depends_on:
       - consul
       - queue
